@@ -20,7 +20,7 @@ public class Zombie extends Entity {    //TODO : 약간의 코드 정리 필요
 
     int healthPoint;
 
-    private long _setTime;
+    private double _setTime;
 
     public Zombie() {
         setImage(BitmapManager.getZombieImage());
@@ -39,8 +39,8 @@ public class Zombie extends Entity {    //TODO : 약간의 코드 정리 필요
     }
 
     public boolean elapsedTime() {
-        long currentTime = System.currentTimeMillis();
-        long difference = currentTime - _setTime;
+        double currentTime = System.currentTimeMillis();
+        double difference = currentTime - _setTime;
         if(difference > LIVE_TIME)
             return true;
         else

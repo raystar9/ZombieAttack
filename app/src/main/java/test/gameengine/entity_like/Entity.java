@@ -23,19 +23,36 @@ public class Entity {   //TODO : Entity는 클릭 불가능한 이미지만을 �
     Rect _rectDst = new Rect();
     Paint paint = new Paint();
 
+    double _setTime;
+
     Entity(){
 
     }
 
     public Entity(Bitmap image, Point size, Point position) {
-        this(image, size.x, size.y, position.x, position.y);
+        this(image, size.x, size.y, position.x, position.y, -1);
+    }
+
+    public Entity(Bitmap image, Point size, Point position, int elapseTimeMills) {
+        this(image, size.x, size.y, position.x, position.y, elapseTimeMills);
     }
 
     public Entity(Bitmap image, int width, int height, int positionX, int positionY) {
+        this(image, width, height, positionX, positionY, -1);
+    }
+
+    public Entity(Bitmap image, int width, int height, int positionX, int positionY, int elapseTimeMills) {
         _image = image;
         _size.set(width, height);
         _position.set(positionX, positionY);
+
         setRects();
+        if(elapseTimeMills == -1){
+
+        }
+        else {
+
+        }
     }
 
     //region getter & setter
@@ -112,6 +129,10 @@ public class Entity {   //TODO : Entity는 클릭 불가능한 이미지만을 �
                 _center.x + _size.x / 2, _center.y + _size.y / 2);
     }
     //endregion
+
+    public void setTime() {
+        _setTime = System.currentTimeMillis();
+    }
 
     public void draw(Canvas canvas) {
         paint.setAlpha(_alpha);
