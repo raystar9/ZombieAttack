@@ -90,7 +90,6 @@ public class GameSystem extends Thread {        //TODO : 엔진에 해당. UI에
     public void onTouchScreen(int x, int y) {
         if (_currentField.getZombieRect().contains(x, y)) {
             _currentField.hitZombie(x, y);
-
         }
     }
 }

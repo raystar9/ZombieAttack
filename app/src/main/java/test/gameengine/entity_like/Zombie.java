@@ -20,22 +20,19 @@ public class Zombie extends Entity {    //TODO : 약간의 코드 정리 필요
 
     int healthPoint;
 
-    public Zombie() {
-        Bitmap zombieImage = BitmapManager.getZombieImage();
-        setImage(zombieImage);
-
-        rectSrc = new Rect();
-        rectDst = new Rect();
-        int width = FRAME_RECTANGLE.width();
-        int height = FRAME_RECTANGLE.height();
-        setSize(width/2, height/3);
-        _center = new Point();
-        _center.x = width/2;
-        _center.y = width*2/3;
-        healthPoint = 7;
-
-    }
     private long _setTime;
+
+    public Zombie() {
+        setImage(BitmapManager.getZombieImage());
+
+        final int FRAME_WIDTH = FRAME_RECTANGLE.width();
+        final int FRAME_HEIGHT = FRAME_RECTANGLE.height();
+        setSize(FRAME_WIDTH/2, FRAME_HEIGHT/3);
+        _center = new Point();
+        _center.x = FRAME_WIDTH/2;
+        _center.y = FRAME_WIDTH*2/3;
+        healthPoint = 7;
+    }
 
     public void setTime() {
         _setTime = System.currentTimeMillis();
@@ -68,15 +65,14 @@ public class Zombie extends Entity {    //TODO : 약간의 코드 정리 필요
         _center.y += _speed.y;
         _size.x += _expendFactor.x;
         _size.y += _expendFactor.y;
-        rectSrc.set(0, 0, _image.getWidth(), _image.getHeight());
-        rectDst.set(_center.x - _size.x/2, _center.y - _size.y/2,
-                _center.x + _size.x/2, _center.y + _size.y/2);
+
+        setRectsByCenter();
     }
 
     @Override
     public void draw(Canvas canvas) {
         paint.setAlpha(_alpha);
-        canvas.drawBitmap(_image, rectSrc, rectDst, paint);
+        canvas.drawBitmap(_image, _rectSrc, _rectDst, paint);
     }
 
     public void loseHealth() {

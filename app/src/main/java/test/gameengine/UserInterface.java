@@ -18,32 +18,30 @@ public class UserInterface {
     private Entity _backGround;
 
     UserInterface() {   //TODO : background를 UI에서 분리해야 함.
-        _backGround = new Entity();
-        _backGround.setImage(BitmapManager.getBackGroundImage());
-
-        _backGround.setPosition(0, 0);
-        _backGround.setSize(FRAME_RECTANGLE.width(), FRAME_RECTANGLE.height());
+        _backGround = new Entity(
+                BitmapManager.getBackGroundImage(),
+                FRAME_RECTANGLE.width(), FRAME_RECTANGLE.height(),
+                0, 0);
 
         int width = FRAME_RECTANGLE.width();
         int height = FRAME_RECTANGLE.height();
 
-        leftButton = new Entity();
-        rightButton = new Entity();
+        leftButton = new Entity(
+                BitmapManager.getLeftButtonImage(),
+                width/2, height/10,
+                0, height*9/10 + 1);
+        rightButton = new Entity(
+                BitmapManager.getRightButtonImage(),
+                width/2, height/10,
+                width/2, height*9/10 + 1);
 
         hearts = new Entity[MAX_HEART];
         for (int i = 0; i < MAX_HEART; i++) {
-            hearts[i] = new Entity();
-            hearts[i].setImage(BitmapManager.getHeartImage());
-            hearts[i].setSize(width/7, width/7);
+            hearts[i] = new Entity(
+                    BitmapManager.getHeartImage(),
+                    width/7, width/7,
+                    0, 0);
         }
-        leftButton.setImage(BitmapManager.getLeftButtonImage());
-        rightButton.setImage(BitmapManager.getRightButtonImage());
-
-        leftButton.setSize(width/2, height/10);
-        rightButton.setSize(width/2, height/10);
-
-        leftButton.setPosition(0, height*9/10 + 1);
-        rightButton.setPosition(width/2, height*9/10 + 1);
         hearts[0].setPosition(width*5/6, height*9/10 + 1 - width/6);
         hearts[1].setPosition(width*4/6, height*9/10 + 1 - width/6);
         hearts[2].setPosition(width*3/6, height*9/10 + 1 - width/6);
