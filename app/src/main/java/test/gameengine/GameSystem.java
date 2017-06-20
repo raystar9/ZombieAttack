@@ -1,17 +1,20 @@
 package test.gameengine;
 
 import android.graphics.Canvas;
+import android.util.Log;
 import android.view.SurfaceHolder;
+import android.widget.Toast;
 
 import java.util.Vector;
-
-import test.gameengine.entity_like.Field;
 
 /**
  * Created by Koo on 2017-05-30.
  */
 
-public class GameSystem extends Thread {        //TODO : 엔진에 해당. UI에 해당하는 부분과의 분리가 필요함.
+public class GameSystem extends Thread {
+    String TAG = "gameSystem";
+
+    private int _fieldIndex = 1;        //TODO : 엔진에 해당. UI에 해당하는 부분과의 분리가 필요함.
 
     private UserInterface _userInterface;
     private boolean haveToStop = false;
@@ -31,7 +34,7 @@ public class GameSystem extends Thread {        //TODO : 엔진에 해당. UI에
             Field field = new Field();
             _fields.add(field);
         }
-        _currentField = _fields.elementAt(0);
+        _currentField = _fields.elementAt(_fieldIndex);
 
         _currentField.createZombie();
     }
@@ -49,7 +52,7 @@ public class GameSystem extends Thread {        //TODO : 엔진에 해당. UI에
         super.run();
 
         try {
-            sleep(10);
+            sleep(20);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -68,7 +71,7 @@ public class GameSystem extends Thread {        //TODO : 엔진에 해당. UI에
     private void update() {
         for (Field field : _fields) {
             field.moveZombie();
-            if (field.isAttacked()) {
+            if (field.zombieAttacked()) {
                 field.removeZombie();
                 field.drawDamaged();
                 loseHealth();
@@ -88,7 +91,24 @@ public class GameSystem extends Thread {        //TODO : 엔진에 해당. UI에
     }
 
     public void onTouchScreen(int x, int y) {
-        if (_currentField.getZombieRect().contains(x, y)) {
+        if(_userInterface.getLeftButton().getRectDst().contains(x, y)){
+            if(_fieldIndex > 0)
+            _currentField = _fields.elementAt(--_fieldIndex);
+            else{
+                Log.d(TAG, "Left End");
+            }
+        }
+
+        else if(_userInterface.getRightButton().getRectDst().contains(x, y)){
+            if(_fieldIndex < _fields.size() - 1)
+                _currentField = _fields.elementAt(++_fieldIndex);
+            else{
+                Log.d(TAG, "Right End");
+            }
+        }
+
+        else if (_currentField.getZombieRect().contains(x, y)) {
+            _userInterface.setHitImage(x, y);
             _currentField.hitZombie(x, y);
         }
     }

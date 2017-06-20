@@ -10,7 +10,7 @@ import android.graphics.Rect;
  * Created by Koo on 2017-05-30.
  */
 
-public class Entity {   //TODO : Entity는 클릭 불가능한 이미지만을 구현하도록 정리. 추상 클래스로 만들고 싶었으나...
+public class Entity { //TODO : Entity는 클릭 불가능한 이미지만을 구현하도록 정리. 추상 클래스로 만들고 싶었으나...
 
     Point _position = new Point(0, 0);
     Point _speed = new Point(0, 0);
@@ -24,16 +24,16 @@ public class Entity {   //TODO : Entity는 클릭 불가능한 이미지만을 �
     Paint paint = new Paint();
 
     double _setTime;
+    double _elapseTime;
 
     Entity(){
-
     }
 
     public Entity(Bitmap image, Point size, Point position) {
         this(image, size.x, size.y, position.x, position.y, -1);
     }
 
-    public Entity(Bitmap image, Point size, Point position, int elapseTimeMills) {
+    public Entity(Bitmap image, Point size, Point position, double elapseTimeMills) {
         this(image, size.x, size.y, position.x, position.y, elapseTimeMills);
     }
 
@@ -41,17 +41,19 @@ public class Entity {   //TODO : Entity는 클릭 불가능한 이미지만을 �
         this(image, width, height, positionX, positionY, -1);
     }
 
-    public Entity(Bitmap image, int width, int height, int positionX, int positionY, int elapseTimeMills) {
+    public Entity(Bitmap image, int width, int height, int positionX, int positionY, double elapseTimeMills) {
         _image = image;
         _size.set(width, height);
         _position.set(positionX, positionY);
+        _elapseTime = elapseTimeMills;
+        _center.set(positionX + width/2, positionY + height/2);
 
         setRects();
-        if(elapseTimeMills == -1){
+        if(elapseTimeMills != -1){
+            setTime();
 
         }
         else {
-
         }
     }
 
@@ -134,18 +136,26 @@ public class Entity {   //TODO : Entity는 클릭 불가능한 이미지만을 �
         _setTime = System.currentTimeMillis();
     }
 
+    public boolean elapsedTime() {
+        double currentTime = System.currentTimeMillis();
+        double difference = currentTime - _setTime;
+        if(difference > _elapseTime)
+            return true;
+        else
+            return false;
+    }
+
     public void draw(Canvas canvas) {
         paint.setAlpha(_alpha);
         canvas.drawBitmap(_image, _rectSrc, _rectDst, paint);
     }
 
     public void drawAtCenter(Canvas canvas) {
-        _rectSrc.set(0, 0, _image.getWidth(), _image.getHeight());
-        _rectDst.set(_center.x - _size.x / 2, _center.y - _size.y / 2,
-                _center.x + _size.x / 2, _center.y + _size.y / 2);
+        _rectDst.set(_position.x - _size.x/2, _position.y - _size.y/2,
+                _position.x + _size.x/2, _position.y + _size.y/2);
 
         paint.setAlpha(_alpha);
-        canvas.drawBitmap(_image, _rectSrc, _rectDst, paint);
+        canvas.drawBitmap(_image, null, _rectDst, paint);
     }
 
     public void setSpeed(int x, int y) {

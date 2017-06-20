@@ -10,7 +10,7 @@ import static test.gameengine.GameView.GAME_RESOURSE;
  * Created by koo on 17. 6. 13.
  */
 
-public class BitmapManager {
+public class BitmapHolder {
 
     private static Bitmap removeColor(Bitmap bitmap) {
         int size = bitmap.getWidth()*bitmap.getHeight();

@@ -1,44 +1,39 @@
-package test.gameengine.entity_like;
+package test.gameengine;
 
 import android.graphics.Canvas;
 import android.graphics.Rect;
 
-import test.gameengine.BitmapManager;
-
-import static test.gameengine.GameView.FRAME_RECTANGLE;
+import test.gameengine.entity_like.Zombie;
 
 /**
  * Created by Koo on 2017-06-02.
  */
 
-public class Field {        // TODO : Sight라는 클래스 이름 자체에 한계가 있음. 이름 재설정 및 그에따른 코드정리.
+public class Field {
 
-    private boolean isZombie = false;
+    private boolean _isZombie = false;
     private Zombie _zombie;
 
     public Field() {
     }
 
     public void createZombie() {
-        _zombie = new Zombie();
-        _zombie.setSpeed(0, 5);
-        _zombie.setExpendFactor(FRAME_RECTANGLE.width() / 100, FRAME_RECTANGLE.height() / 150);
-        _zombie.setTime();
-        isZombie = true;
+        _zombie = new Zombie(5000);
+        _isZombie = true;
     }
 
     public void drawZombie(Canvas canvas) {
-        if(isZombie)
+        if(_isZombie)
             _zombie.draw(canvas);
     }
 
     public void moveZombie() {
-        if(isZombie)
+        if(_isZombie)
             _zombie.move();
     }
 
-    public boolean isAttacked() {
-        if(isZombie) {
+    public boolean zombieAttacked() {
+        if(_isZombie) {
             if (_zombie.elapsedTime())
                 return true;
         }
@@ -47,34 +42,26 @@ public class Field {        // TODO : Sight라는 클래스 이름 자체에 한
     }
 
     public void removeZombie() {
-        isZombie = false;
+        _isZombie = false;
         _zombie = null;
     }
 
     public Rect getZombieRect() {
-        if(isZombie) {
+        if(_isZombie) {
             return _zombie.getRectDst();
         }
         return new Rect();
     }
 
     public boolean hasZombie() {
-        return isZombie;
+        return _isZombie;
     }
 
     public void hitZombie(int x, int y) {
         _zombie.loseHealth();
-
-        drawHitImage(x, y);     //TODO : 타격 판정 및 타격 이미지 구현.
         if(_zombie.getHealthPoint() <= 0){
             removeZombie();
         }
-    }
-
-    private Entity drawHitImage(int x, int y) {
-        Entity hitEntity = new Entity();
-        hitEntity.setImage(BitmapManager.getHitImage());
-        return hitEntity;
     }
 
     public void drawDamaged() {
