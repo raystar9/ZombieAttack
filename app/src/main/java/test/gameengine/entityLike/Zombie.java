@@ -1,4 +1,4 @@
-package test.gameengine.entity_like;
+package test.gameengine.entityLike;
 
 import android.graphics.Canvas;
 import android.graphics.Point;
@@ -17,7 +17,7 @@ public class Zombie extends Entity {    //TODO : 약간의 코드 정리 필요
 
     int healthPoint;
 
-    public Zombie(double elapseTimeMills) {
+    public Zombie(double lifeTime) {
         _image = BitmapHolder.getZombieImage();
 
         final int FRAME_WIDTH = FRAME_RECTANGLE.width();
@@ -27,10 +27,10 @@ public class Zombie extends Entity {    //TODO : 약간의 코드 정리 필요
         _center.x = FRAME_WIDTH/2;
         _center.y = FRAME_WIDTH*2/3;
         healthPoint = 7;
-        _elapseTime = elapseTimeMills;
+//        _lifeTime = lifeTime;
         setSpeed(0, 5);
         setExpendFactor(FRAME_RECTANGLE.width() / 100, FRAME_RECTANGLE.height() / 150);
-        setTime();
+        setTime(lifeTime);
     }
 
     public void setExpendFactor(Point expendFactor) {
@@ -57,8 +57,8 @@ public class Zombie extends Entity {    //TODO : 약간의 코드 정리 필요
 
     @Override
     public void draw(Canvas canvas) {
-        paint.setAlpha(_alpha);
-        canvas.drawBitmap(_image, _rectSrc, _rectDst, paint);
+        _paint.setAlpha(_alpha);
+        canvas.drawBitmap(_image, _rectSrc, _rectDst, _paint);
     }
 
     public void loseHealth() {

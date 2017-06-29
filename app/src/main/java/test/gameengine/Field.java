@@ -3,7 +3,10 @@ package test.gameengine;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 
-import test.gameengine.entity_like.Zombie;
+import test.gameengine.entityLike.Entity;
+import test.gameengine.entityLike.Zombie;
+
+import static test.gameengine.GameView.FRAME_RECTANGLE;
 
 /**
  * Created by Koo on 2017-06-02.
@@ -13,8 +16,31 @@ public class Field {
 
     private boolean _isZombie = false;
     private Zombie _zombie;
+    private Entity _backGround;
 
     public Field() {
+        _backGround = new Entity(
+                BitmapHolder.getBackGroundImage(),
+                FRAME_RECTANGLE.width(), FRAME_RECTANGLE.height(),
+                0, 0);
+    }
+
+    public void drawBackGround(Canvas canvas) {
+        _backGround.draw(canvas);
+    }
+
+    public void setBackGroundImage(int imageNumber){
+        switch(imageNumber){
+            case 0:
+                _backGround.setImage(BitmapHolder.getBackGroundImage());
+                break;
+            case 1:
+                _backGround.setImage(BitmapHolder.getBackGroundImage());
+                break;
+            case 2:
+                _backGround.setImage(BitmapHolder.getBackGroundImage());
+                break;
+        }
     }
 
     public void createZombie() {
@@ -34,7 +60,7 @@ public class Field {
 
     public boolean zombieAttacked() {
         if(_isZombie) {
-            if (_zombie.elapsedTime())
+            if (_zombie.isLifeTimeEnded())
                 return true;
         }
         return false;

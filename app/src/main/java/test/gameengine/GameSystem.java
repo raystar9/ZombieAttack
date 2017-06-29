@@ -12,16 +12,18 @@ import java.util.Vector;
  */
 
 public class GameSystem extends Thread {
+    private Stage _stage;
     String TAG = "gameSystem";
 
-    private int _fieldIndex = 1;        //TODO : 엔진에 해당. UI에 해당하는 부분과의 분리가 필요함.
-
     private UserInterface _userInterface;
-    private boolean haveToStop = false;
     private SurfaceHolder _surfaceHolder;
+
+    private boolean haveToStop = false;
 
     Vector<Field> _fields = new Vector<>();
     Field _currentField;
+    private int _fieldIndex = 1;
+    private int _currentStage = 1;
     private int _healthPoint;
 
     public GameSystem(SurfaceHolder holder) {
@@ -34,9 +36,10 @@ public class GameSystem extends Thread {
             Field field = new Field();
             _fields.add(field);
         }
+        _stage = new Stage(_fields);
         _currentField = _fields.elementAt(_fieldIndex);
 
-        _currentField.createZombie();
+//        _currentField.createZombie();
     }
 
     public void on() {
@@ -57,6 +60,7 @@ public class GameSystem extends Thread {
             e.printStackTrace();
         }
         while (!haveToStop) {
+            _stage.runStage(_currentStage);
             // 화면 잠그기
             Canvas canvas = _surfaceHolder.lockCanvas();
             // 화면 그리기
@@ -80,7 +84,7 @@ public class GameSystem extends Thread {
     }
 
     private void draw(Canvas canvas) {
-        _userInterface.drawBackGround(canvas);
+        _currentField.drawBackGround(canvas);
         _currentField.drawZombie(canvas);
         _userInterface.draw(canvas);
     }
@@ -90,8 +94,8 @@ public class GameSystem extends Thread {
         _healthPoint--;
     }
 
-    public void onTouchScreen(int x, int y) {
-        if(_userInterface.getLeftButton().getRectDst().contains(x, y)){
+    public void screenTouchedAt(int x, int y) {
+        if(_userInterface.getLeftButtonRect().contains(x, y)){
             if(_fieldIndex > 0)
             _currentField = _fields.elementAt(--_fieldIndex);
             else{
@@ -99,7 +103,7 @@ public class GameSystem extends Thread {
             }
         }
 
-        else if(_userInterface.getRightButton().getRectDst().contains(x, y)){
+        else if(_userInterface.getRightButtonRect().contains(x, y)){
             if(_fieldIndex < _fields.size() - 1)
                 _currentField = _fields.elementAt(++_fieldIndex);
             else{

@@ -17,7 +17,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     public static Resources GAME_RESOURSE;      //TODO : 하지만 그렇다고 static 변수로 만드는 것이 옳은 지
                                                 //TODO : 다시 생각해 볼 필요가 있음.
     private String TAG = "GameView";
-    GameSystem gameSystem;
+    GameSystem _gameSystem;
 
     public GameView(Context context) {
         super(context);
@@ -31,8 +31,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         FRAME_RECTANGLE = new Rect(0,0,getWidth(), getHeight());
         GAME_RESOURSE = getResources();
 
-        gameSystem = new GameSystem(holder);
-        gameSystem.on();
+        _gameSystem = new GameSystem(holder);
+        _gameSystem.on();
     }
 
     @Override
@@ -41,14 +41,14 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
-        gameSystem.off();
+        _gameSystem.off();
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         int x = (int)event.getX();
         int y = (int)event.getY();
-        gameSystem.onTouchScreen(x, y);
+        _gameSystem.screenTouchedAt(x, y);
         return false;
     }
 }

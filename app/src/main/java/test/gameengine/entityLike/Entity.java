@@ -1,4 +1,4 @@
-package test.gameengine.entity_like;
+package test.gameengine.entityLike;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -6,12 +6,15 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
 
+import test.gameengine.Timer;
+
 /**
  * Created by Koo on 2017-05-30.
  */
 
-public class Entity { //TODO : Entity는 클릭 불가능한 이미지만을 구현하도록 정리. 추상 클래스로 만들고 싶었으나...
+public class Entity {
 
+    //region field
     Point _position = new Point(0, 0);
     Point _speed = new Point(0, 0);
     Point _size = new Point(0, 0);
@@ -21,11 +24,11 @@ public class Entity { //TODO : Entity는 클릭 불가능한 이미지만을 구
 
     Rect _rectSrc = new Rect();
     Rect _rectDst = new Rect();
-    Paint paint = new Paint();
+    Paint _paint = new Paint();
 
-    double _setTime;
-    double _elapseTime;
-
+    Timer _timer;
+    //endregion
+    //region constructor
     Entity(){
     }
 
@@ -41,22 +44,20 @@ public class Entity { //TODO : Entity는 클릭 불가능한 이미지만을 구
         this(image, width, height, positionX, positionY, -1);
     }
 
-    public Entity(Bitmap image, int width, int height, int positionX, int positionY, double elapseTimeMills) {
+    public Entity(Bitmap image, int width, int height, int positionX, int positionY, double lifeTime) {
         _image = image;
         _size.set(width, height);
         _position.set(positionX, positionY);
-        _elapseTime = elapseTimeMills;
         _center.set(positionX + width/2, positionY + height/2);
 
         setRects();
-        if(elapseTimeMills != -1){
-            setTime();
-
+        if(lifeTime != -1){
+            setTime(lifeTime);
         }
         else {
         }
     }
-
+    //endregion
     //region getter & setter
     public Point getPosition() {
         return _position;
@@ -132,30 +133,25 @@ public class Entity { //TODO : Entity는 클릭 불가능한 이미지만을 구
     }
     //endregion
 
-    public void setTime() {
-        _setTime = System.currentTimeMillis();
+    public void setTime(double lifeTime) {
+        _timer = new Timer(lifeTime);
     }
 
-    public boolean elapsedTime() {
-        double currentTime = System.currentTimeMillis();
-        double difference = currentTime - _setTime;
-        if(difference > _elapseTime)
-            return true;
-        else
-            return false;
+    public boolean isLifeTimeEnded() {
+        return _timer.isEnded();
     }
 
     public void draw(Canvas canvas) {
-        paint.setAlpha(_alpha);
-        canvas.drawBitmap(_image, _rectSrc, _rectDst, paint);
+        _paint.setAlpha(_alpha);
+        canvas.drawBitmap(_image, _rectSrc, _rectDst, _paint);
     }
 
     public void drawAtCenter(Canvas canvas) {
         _rectDst.set(_position.x - _size.x/2, _position.y - _size.y/2,
                 _position.x + _size.x/2, _position.y + _size.y/2);
 
-        paint.setAlpha(_alpha);
-        canvas.drawBitmap(_image, null, _rectDst, paint);
+        _paint.setAlpha(_alpha);
+        canvas.drawBitmap(_image, null, _rectDst, _paint);
     }
 
     public void setSpeed(int x, int y) {
